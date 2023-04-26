@@ -1,4 +1,4 @@
-package pro.sky.collection_l1;
+package pro.sky.collection_l1.exception;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 

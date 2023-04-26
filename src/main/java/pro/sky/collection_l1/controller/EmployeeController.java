@@ -1,11 +1,16 @@
-package pro.sky.collection_l1;
+package pro.sky.collection_l1.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pro.sky.collection_l1.exception.BadParamsException;
+import pro.sky.collection_l1.exception.EmployeeAlreadyAddedException;
+import pro.sky.collection_l1.exception.EmployeeNotFoundException;
+import pro.sky.collection_l1.exception.EmployeeStorageIsFullException;
+import pro.sky.collection_l1.model.Employee;
+import pro.sky.collection_l1.service.EmployeeService;
 
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
@@ -16,16 +21,13 @@ public class EmployeeController {
         this.employeeService = service;
     }
 
-    @GetMapping
-    public String sayHello(){
-        return "Hello, world";
-    }
-
     @GetMapping("/add")
     public Employee addEmployee(@RequestParam (name="firstName", required = false) String firstName,
-                            @RequestParam (name = "lastName", required = false) String lastName){
+                                @RequestParam (name = "lastName", required = false) String lastName,
+                                @RequestParam (name = "departmentId", required = false) int department,
+                                @RequestParam (name = "salary", required = false) int salary){
 
-    return employeeService.addEmployee(firstName, lastName);
+    return employeeService.addEmployee(firstName, lastName,department,salary);
     }
 
     @GetMapping("/remove")
@@ -41,9 +43,9 @@ public class EmployeeController {
     return employeeService.findEmployee(firstName, lastName);
     }
 
-    @GetMapping()
-    public Collection<Employee> showAllEmployees(){
-        return employeeService.showAllEmployees();
+    @GetMapping("/showAll")
+    public Collection<Employee> getAllEmployees(){
+        return employeeService.getAllEmployees();
     }
 
 
