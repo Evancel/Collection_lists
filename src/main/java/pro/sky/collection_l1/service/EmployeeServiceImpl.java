@@ -1,5 +1,6 @@
 package pro.sky.collection_l1.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pro.sky.collection_l1.model.Employee;
 import pro.sky.collection_l1.exception.BadParamsException;
@@ -20,14 +21,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(String firstName, String lastName, int department, int salary) {
-        //блок проверок на ошибки
-        if(firstName==null || firstName.isEmpty() || lastName==null || lastName.isEmpty() ) {
+
+        if(firstName==null || StringUtils.isBlank(firstName)
+                || lastName==null || StringUtils.isBlank(lastName)
+                || !StringUtils.isAlphaSpace(firstName) || !StringUtils.isAlphaSpace(lastName)
+                || StringUtils.equalsIgnoreCase(firstName,lastName)) {
             throw new BadParamsException();
         }  else if (employeeList.size()>MAX_SIZE_OF_LIST){
             throw new EmployeeStorageIsFullException();
         }
 
-        Employee e = new Employee(firstName, lastName, department, salary);
+        //trim - обрезаем пробелы
+        //lowerCase - привели к маленьким буквам
+        String checkedFirstName = StringUtils.capitalize(StringUtils.lowerCase(StringUtils.trim(firstName)));
+        String checkedLastName = StringUtils.capitalize(StringUtils.lowerCase(StringUtils.trim(firstName)));
+
+
+
+        Employee e = new Employee(checkedFirstName, checkedLastName, department, salary);
         if (employeeList.contains(e)){
             throw new EmployeeAlreadyAddedException();
         }
