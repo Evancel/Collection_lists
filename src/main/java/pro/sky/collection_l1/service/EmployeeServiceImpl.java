@@ -25,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(firstName==null || StringUtils.isBlank(firstName)
                 || lastName==null || StringUtils.isBlank(lastName)
                 || !StringUtils.isAlphaSpace(firstName) || !StringUtils.isAlphaSpace(lastName)
-                || StringUtils.equalsIgnoreCase(firstName,lastName)) {
+                || StringUtils.equalsIgnoreCase(StringUtils.trim(firstName),StringUtils.trim(lastName))) {
             throw new BadParamsException();
         }  else if (employeeList.size()>MAX_SIZE_OF_LIST){
             throw new EmployeeStorageIsFullException();
@@ -34,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //trim - обрезаем пробелы
         //lowerCase - привели к маленьким буквам
         String checkedFirstName = StringUtils.capitalize(StringUtils.lowerCase(StringUtils.trim(firstName)));
-        String checkedLastName = StringUtils.capitalize(StringUtils.lowerCase(StringUtils.trim(firstName)));
+        String checkedLastName = StringUtils.capitalize(StringUtils.lowerCase(StringUtils.trim(lastName)));
 
 
 
