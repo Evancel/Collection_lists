@@ -10,6 +10,8 @@ import pro.sky.collection_l1.exception.EmployeeStorageIsFullException;
 
 import java.util.*;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -22,23 +24,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee addEmployee(String firstName, String lastName, int department, int salary) {
 
-        if(firstName==null || StringUtils.isBlank(firstName)
-                || lastName==null || StringUtils.isBlank(lastName)
-                || !StringUtils.isAlphaSpace(firstName) || !StringUtils.isAlphaSpace(lastName)
-                || StringUtils.equalsIgnoreCase(StringUtils.trim(firstName),StringUtils.trim(lastName))) {
+        if(!validationName(firstName, lastName)) {
             throw new BadParamsException();
         }  else if (employeeList.size()>MAX_SIZE_OF_LIST){
             throw new EmployeeStorageIsFullException();
         }
 
-        //trim - обрезаем пробелы
-        //lowerCase - привели к маленьким буквам
-        String checkedFirstName = StringUtils.capitalize(StringUtils.lowerCase(StringUtils.trim(firstName)));
-        String checkedLastName = StringUtils.capitalize(StringUtils.lowerCase(StringUtils.trim(lastName)));
-
-
-
-        Employee e = new Employee(checkedFirstName, checkedLastName, department, salary);
+        Employee e = new Employee(firstName, lastName, department, salary);
         if (employeeList.contains(e)){
             throw new EmployeeAlreadyAddedException();
         }
@@ -51,7 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee removeEmployee (String firstName, String lastName) {
         //блок проверок на ошибки
-        if(firstName==null || firstName.isEmpty() || lastName==null || lastName.isEmpty() ) {
+        if(!validationName(firstName, lastName)) {
             throw new BadParamsException();
         } else if (findEmployee(firstName, lastName).equals(null)){
             throw new EmployeeNotFoundException();
@@ -67,7 +59,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee findEmployee(String firstName, String lastName) {
 
-        if(firstName.equals(null) || firstName=="" || lastName.equals(null) || lastName=="" ) {
+        if(!validationName(firstName, lastName)) {
             throw new BadParamsException();
         }
 
@@ -82,6 +74,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Collection<Employee> getAllEmployees() {
       return Collections.unmodifiableList(employeeList);
+    }
+
+    public boolean validationName(String firstName, String lastName){
+        return (firstName!=null && !isBlank(firstName)
+                && lastName!=null && !isBlank(lastName)
+                && isAlphaSpace(firstName) && isAlphaSpace(lastName)
+                && !equalsIgnoreCase(trim(firstName), trim(lastName)));
     }
 
 }

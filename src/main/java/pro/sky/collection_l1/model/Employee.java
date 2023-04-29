@@ -2,6 +2,8 @@ package pro.sky.collection_l1.model;
 
 import java.util.Objects;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 public class Employee {
     private String firstName;
     private String lastName;
@@ -9,12 +11,15 @@ public class Employee {
     private int salary;
 
     public Employee(String lastName, String firstName){
-        this.lastName = lastName;
-        this.firstName = firstName;
+        //trim - обрезаем пробелы
+        //lowerCase - привели к маленьким буквам
+        //capitalize - делаем первую букву большой
+        this.lastName = capitalize(lowerCase(trim(lastName)));
+        this.firstName = capitalize(lowerCase(trim(firstName)));
     }
     public Employee(String lastName, String firstName, int department, int salary){
-        this.lastName = lastName;
-        this.firstName = firstName;
+        this.lastName = capitalize(lowerCase(trim(lastName)));
+        this.firstName = capitalize(lowerCase(trim(firstName)));
         this.department = department;
         this.salary=salary;
     }
