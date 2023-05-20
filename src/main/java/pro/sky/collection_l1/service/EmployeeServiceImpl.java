@@ -1,12 +1,10 @@
 package pro.sky.collection_l1.service;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pro.sky.collection_l1.model.Employee;
 import pro.sky.collection_l1.exception.BadParamsException;
 import pro.sky.collection_l1.exception.EmployeeAlreadyAddedException;
 import pro.sky.collection_l1.exception.EmployeeNotFoundException;
-import pro.sky.collection_l1.exception.EmployeeStorageIsFullException;
 
 import java.util.*;
 
@@ -19,18 +17,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeServiceImpl(){
         this.employeeList = new ArrayList<>();
     }
-    private final static int MAX_SIZE_OF_LIST = 3;
+  //  private final static int MAX_SIZE_OF_LIST = 3;
 
     @Override
-    public Employee addEmployee(String firstName, String lastName, int department, int salary) {
+    public Employee addEmployee(String lastName, String firstName,int department, int salary) {
 
-        if(!validationName(firstName, lastName)) {
+        if(!validationName(lastName, firstName)) {
             throw new BadParamsException();
-        }  else if (employeeList.size()>MAX_SIZE_OF_LIST){
-            throw new EmployeeStorageIsFullException();
         }
+  //      else if (employeeList.size()>MAX_SIZE_OF_LIST){
+  //          throw new EmployeeStorageIsFullException();
+  //      }
 
-        Employee e = new Employee(firstName, lastName, department, salary);
+        Employee e = new Employee(lastName, firstName,department, salary);
         if (employeeList.contains(e)){
             throw new EmployeeAlreadyAddedException();
         }
@@ -41,15 +40,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
     @Override
-    public Employee removeEmployee (String firstName, String lastName) {
+    public Employee removeEmployee (String lastName, String firstName) {
         //блок проверок на ошибки
-        if(!validationName(firstName, lastName)) {
+        if(!validationName(lastName,firstName)) {
             throw new BadParamsException();
-        } else if (findEmployee(firstName, lastName).equals(null)){
+        } else if (findEmployee(lastName,firstName).equals(null)){
             throw new EmployeeNotFoundException();
         }
 
-        Employee e = findEmployee(firstName, lastName);
+        Employee e = findEmployee(lastName,firstName);
         employeeList.remove(e);
         System.out.println("The employee has been deleted successfully.");
 
@@ -57,13 +56,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
     @Override
-    public Employee findEmployee(String firstName, String lastName) {
+    public Employee findEmployee(String lastName,String firstName) {
 
-        if(!validationName(firstName, lastName)) {
+        if(!validationName(lastName,firstName)) {
             throw new BadParamsException();
         }
 
-        Employee e = new Employee(firstName, lastName);
+        Employee e = new Employee(lastName,firstName);
 
         if(!employeeList.contains(e)){
             throw new EmployeeNotFoundException();
@@ -76,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
       return Collections.unmodifiableList(employeeList);
     }
 
-    public boolean validationName(String firstName, String lastName){
+    public boolean validationName(String lastName,String firstName){
         return (firstName!=null && !isBlank(firstName)
                 && lastName!=null && !isBlank(lastName)
                 && isAlphaSpace(firstName) && isAlphaSpace(lastName)

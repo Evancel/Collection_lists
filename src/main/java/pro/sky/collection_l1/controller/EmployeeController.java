@@ -22,25 +22,25 @@ public class EmployeeController {
     }
 
     @GetMapping("/add")
-    public Employee addEmployee(@RequestParam (name="firstName", required = false) String firstName,
-                                @RequestParam (name = "lastName", required = false) String lastName,
+    public Employee addEmployee(@RequestParam (name = "lastName", required = false) String lastName,
+                                @RequestParam (name="firstName", required = false) String firstName,
                                 @RequestParam (name = "departmentId", required = false) int department,
                                 @RequestParam (name = "salary", required = false) int salary){
 
-    return employeeService.addEmployee(firstName, lastName,department,salary);
+    return employeeService.addEmployee(lastName,firstName,department,salary);
     }
 
     @GetMapping("/remove")
-    public Employee removeEmployee(@RequestParam (name="firstName", required = false) String firstName,
-                              @RequestParam (name = "lastName", required = false) String lastName){
-     return employeeService.removeEmployee(firstName, lastName);
+    public Employee removeEmployee(@RequestParam (name = "lastName", required = false) String lastName,
+                                   @RequestParam (name="firstName", required = false) String firstName){
+     return employeeService.removeEmployee(lastName,firstName);
     }
 
     @GetMapping("/find")
-    public Employee findEmployee(@RequestParam (name="firstName", required = false) String firstName,
-                                 @RequestParam (name = "lastName", required = false) String lastName){
+    public Employee findEmployee(@RequestParam (name = "lastName", required = false) String lastName,
+                                 @RequestParam (name="firstName", required = false) String firstName){
 
-    return employeeService.findEmployee(firstName, lastName);
+    return employeeService.findEmployee(lastName,firstName);
     }
 
     @GetMapping("/showAll")

@@ -16,39 +16,47 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     
     @Override
-    public Optional<Employee> employeeWithMaxSalaryInDepartment(int department){
+    public Integer maxSalaryOfDepartment(int department){
         final Collection<Employee> allEmployees = employeeService.getAllEmployees();
-        Optional <Employee> employeeWithMaxSalaryInDepartment = allEmployees.stream()
+        return allEmployees.stream()
                 .filter(e->e.getDepartment()==department)
-                .max(Comparator.comparingInt(e->e.getSalary()));
-
-        return employeeWithMaxSalaryInDepartment;
+                .map(Employee::getSalary)
+                .max(Integer::compareTo)
+                .orElseThrow(()->new RuntimeException("There are no employee in the department!"));
     }
     @Override
-    public Optional<Employee> employeeWithMinSalaryInDepartment(int department){
+    public Integer minSalaryOfDepartment(int department){
         final Collection<Employee> allEmployees = employeeService.getAllEmployees();
-        Optional <Employee> employeeWithMaxSalaryInDepartment = allEmployees.stream()
+        return allEmployees.stream()
                 .filter(e->e.getDepartment()==department)
-                .min(Comparator.comparingInt(e->e.getSalary()));
+                .map(Employee::getSalary)
+                .min(Integer::compareTo)
+                .orElseThrow(()->new RuntimeException("There are no employee in the department!"));
+    }
 
-        return employeeWithMaxSalaryInDepartment;
+    @Override
+    public int sumSalaryOfDepartment(int department){
+        final Collection<Employee> allEmployees = employeeService.getAllEmployees();
+        return allEmployees.stream()
+                .filter(e->e.getDepartment()==department)
+                .mapToInt(Employee::getSalary)
+                .sum();
     }
     @Override
     public List<Employee> employeesByDepartment(int department){
         final Collection<Employee> allEmployees = employeeService.getAllEmployees();
-        List <Employee> employeesInDepartment = allEmployees.stream()
+        return allEmployees.stream()
                 .filter(e->e.getDepartment()==department)
                 .collect(Collectors.toList());
-        return employeesInDepartment;
     }
     @Override
     public Map<Integer, List<Employee>> groupEmployeesByDepartment() {
         final Collection<Employee> allEmployees = employeeService.getAllEmployees();
         List<Employee> employees = allEmployees.stream()
-                .sorted(Comparator.comparingInt(e->e.getDepartment()))
+                .sorted(Comparator.comparingInt(Employee::getDepartment))
                 .collect(Collectors.toList());
 
         return allEmployees.stream()
-                .collect(Collectors.groupingBy(e -> e.getDepartment()));
+                .collect(Collectors.groupingBy(Employee::getDepartment));
     }
 }
